@@ -12,6 +12,7 @@ import com.squareup.otto.Subscribe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -27,6 +28,8 @@ public class GlassController {
     private OutputStream outputStream;
     private BluetoothSocket socket;
 
+    private static final String[] authorizedNames = new String[]{"mike digiovanni's glass", "andy lin's glass", "geoff cubitt's glass"};
+
     public BluetoothDevice device; //FIXME: hack
 
     public GlassController() {
@@ -37,8 +40,18 @@ public class GlassController {
         for (BluetoothDevice device : devices) {
             Log.d("BTD", "type:" + device.getType() + " " + device.getName() + "remove dev is not null for self address");
 
-            if (device.getName().equals("Mike DiGiovanni's Glass")) {
+            // TODO: use another device and check name
+            String deviceName = device.getName().toLowerCase();
+
+            //if (Arrays.asList(authorizedNames).contains((device.getName()).toLowerCase())) {
+
+            // check if deviceName ends with "glass" or ends with glass a space and 4 digits
+            if (deviceName.endsWith("glass") || deviceName.matches(".*glass \\d{4}$")) {
+
                 this.device = device;
+
+                Log.d("DEVICE", "device is " + device.getName());
+
                 try {
                     socket = device.createRfcommSocketToServiceRecord(SECURE_UUID);
                     socket.connect();
@@ -115,11 +128,16 @@ public class GlassController {
 //        List<Proto.Envelope> evemts = GlassMessagingUtil.getTapEvents();
 //        List<Proto.Envelope> evemts = GlassMessagingUtil.getSwipeLeftEvents();
 
-        for (Proto.Envelope event : events) {
-            GlassProtocol.writeMessage(event, outputStream);
-        }
+        if (outputStream != null) {
+            for (Proto.Envelope event : events) {
+
+                GlassProtocol.writeMessage(event, outputStream);
+            }
 //        GlassProtocol.writeMessage(GlassMessagingUtil.createTimelineMessage("hell"), outputStream); //works
-        outputStream.flush();
+            outputStream.flush();
+        } else {
+            throw new RuntimeException("outputStream is null");
+        }
     }
 
     @Subscribe

@@ -1,14 +1,20 @@
 package com.mikedg.android.tiltcontrolcontroller;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikedg.android.btcomm.connector.BluetoothConnector;
 import com.mikedg.android.btcomm.connector.ConnectorHelper;
@@ -25,6 +31,9 @@ public class MainActivity extends FragmentActivity implements DrawerFragment.OnF
     private TextView mLogTextView;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private final static String TAG = MainActivity.class.getSimpleName();
+    private boolean mIsWaitingForForceStop = false;
+    private static final String PACKAGE_MY_GLASS = "com.google.glass.companion";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +70,15 @@ public class MainActivity extends FragmentActivity implements DrawerFragment.OnF
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mIsWaitingForForceStop == true) {
+            tryConnecting();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 
@@ -87,8 +105,30 @@ public class MainActivity extends FragmentActivity implements DrawerFragment.OnF
 //    }
 
     public void onClick_start(View view) {
-        ControllerService.startService(this);
+
+        tryConnecting();
     }
+
+    private void tryConnecting() {
+        // check if myglass is running
+        if (AppUtil.isMyGlassRunning(this)) {
+
+            // show the Application Manager screen for the MyGlass app
+            AppUtil.startMyGlassAppInfo(this);
+
+            // display toast to tell user what to do
+            Toast.makeText(this, "Press \"Force Stop\" button", Toast.LENGTH_LONG).show();
+
+            mIsWaitingForForceStop = true;
+
+            ControllerService.startService(this);
+        } else {
+            Log.i(TAG, "MyGlass app is still running");
+
+            ControllerService.startService(this);
+        }
+    }
+
     public void onClick_stop(View view) {
         ControllerService.stopService(this);
     }

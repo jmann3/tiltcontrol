@@ -112,11 +112,17 @@ public class BluetoothClientConnector extends com.mikedg.android.btcomm.connecto
 
             // Get a BluetoothSocket for a connection with the
             // given BluetoothDevice
-            try {
-                tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
-            } catch (IOException e) {
-                Log.e(TAG, "create() failed", e);
+
+            if (device != null) {
+                try {
+                    tmp = device.createRfcommSocketToServiceRecord(MY_UUID);
+                } catch (IOException e) {
+                    Log.e(TAG, "create() failed", e);
+                }
+            } else {
+                throw new RuntimeException("null pointer exception for device");
             }
+
             mmSocket = tmp;
         }
 
