@@ -113,11 +113,11 @@ public class MainActivity extends FragmentActivity implements DrawerFragment.OnF
         // check if myglass is running
         if (AppUtil.isMyGlassRunning(this)) {
 
-            // show the Application Manager screen for the MyGlass app
+            // show the Application Manager screen for the MyGlass app so the user can kill it
             AppUtil.startMyGlassAppInfo(this);
 
             // display toast to tell user what to do
-            Toast.makeText(this, "Press \"Force Stop\" button", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Press \"Force Stop\"", Toast.LENGTH_LONG).show();
 
             mIsWaitingForForceStop = true;
 
