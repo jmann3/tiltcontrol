@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mikedg.android.tiltcontrolcontroller.MainActivity" >
+    <item android:id="@+id/wink_item"
+        android:title="@string/simulate_wink_item"
+        android:orderInCategory="100"
+        android:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/diagnotic_item"
+        android:title="diagnostics"
+        android:orderInCategory="102"
+        android:showAsAction="never" >
+    </item>
+</menu>

@@ -1,8 +1,10 @@
 package com.mikedg.android.tiltcontrolcontroller;
 
 import android.app.ActivityManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.Settings;
 
@@ -37,6 +39,29 @@ public class AppUtil {
             }
         }
         return false;
+    }
+
+    public static void startMyGlassApp(Context context) {
+        // open "MyGlass" app
+        try {
+            Intent i;
+            PackageManager manager = context.getPackageManager();
+            try {
+                i = manager.getLaunchIntentForPackage(PACKAGE_MY_GLASS);
+
+                if (i == null)
+                    throw new PackageManager.NameNotFoundException();
+
+                i.addCategory(Intent.CATEGORY_LAUNCHER);
+                context.startActivity(i);
+
+            } catch (PackageManager.NameNotFoundException e) {
+
+            }
+
+        } catch (ActivityNotFoundException e ) {
+
+        }
     }
 
 }

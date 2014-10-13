@@ -1,6 +1,5 @@
 package com.mikedg.android.tiltcontrolcontroller;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -102,7 +101,7 @@ public class ControllerService extends Service {
                 .setContentTitle("Tilt Control Controller")
                 .setContentText("Status"); //FIXME: most recent status
 // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, MainActivity.class);
+        Intent resultIntent = new Intent(this, DiagnosticActivity.class);
 
 // The stack builder object will contain an artificial back stack for the
 // started Activity.
@@ -110,7 +109,7 @@ public class ControllerService extends Service {
 // your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addParentStack(DiagnosticActivity.class);
 // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent =
