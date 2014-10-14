@@ -3,6 +3,9 @@ package com.mikedg.android.tiltcontrolcontroller;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,12 +13,16 @@ import android.view.ViewConfiguration;
 import android.widget.Button;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainActivity extends DisplayActivity {
 
     private final static String TAG = MainActivity.class.getSimpleName();
     private Button mConfigureGlassButton;
     private Button mEnableGlassControlButton;
+    private ViewPager mViewPager;
+    private ArrayList<HashMap> mTutorialPages;
 
 
     @Override
@@ -39,6 +46,23 @@ public class MainActivity extends DisplayActivity {
 
         mConfigureGlassButton = (Button)findViewById(R.id.button_MyGlass);
         mEnableGlassControlButton = (Button)findViewById(R.id.button_EnableTilt);
+        mViewPager = (ViewPager)findViewById(R.id.main_view_pager);
+
+        mViewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+
+            @Override
+            public Fragment getItem(int position) {
+                int imageId = ((int[])TutorialData.getImages())[position];
+                String title = ((String[])TutorialData.getTitles())[position];
+                String description = ((String[])TutorialData.getDescriptions())[position];
+                return TutorialScreenFragment.newInstance(imageId, title, description);
+            }
+
+            @Override
+            public int getCount() {
+                return TutorialData.getTitles().length;
+            }
+        });
     }
 
     @Override

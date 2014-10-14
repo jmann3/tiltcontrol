@@ -3,20 +3,17 @@ package com.mikedg.android.tiltcontrolcontroller;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mikedg.android.btcomm.connector.BluetoothConnector;
 import com.mikedg.android.btcomm.connector.ConnectorHelper;
 import com.mikedg.android.btcomm.messages.CommandMessage;
 import com.mikedg.android.btcomm.messages.PTGCMessage;
-import com.mikedg.android.tiltcontrolcontroller.events.SimWinkEvent;
 import com.mikedg.android.tiltcontrolcontroller.events.StatusMessageEvent;
 import com.squareup.otto.Subscribe;
 

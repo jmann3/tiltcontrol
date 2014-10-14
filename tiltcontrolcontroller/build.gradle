@@ -34,6 +34,7 @@ repositories {
     maven {
         url "https://repo.commonsware.com.s3.amazonaws.com"
     }
+    maven { url "http://dl.bintray.com/populov/maven" }
 }
 
 
@@ -42,6 +43,9 @@ dependencies {
     compile 'com.android.support:support-v4:19.0.0'
     compile "com.android.support:appcompat-v7:19.0.+"
 
+    compile ('com.viewpagerindicator:library:2.4.1') {
+        exclude group: 'com.android.support', module:'support-v4'
+    }
 
     compile 'com.commonsware.cwac:merge:1.0.2'
     compile 'com.polysfactory.lib.glass.bluetooth:glass-bluetooth:0.1.+' //Glass control
