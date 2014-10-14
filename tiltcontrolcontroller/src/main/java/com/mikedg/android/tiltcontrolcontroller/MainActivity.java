@@ -12,6 +12,10 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.Button;
 
+import com.viewpagerindicator.IconPageIndicator;
+import com.viewpagerindicator.LinePageIndicator;
+import com.viewpagerindicator.UnderlinePageIndicator;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,6 +67,18 @@ public class MainActivity extends DisplayActivity {
                 return TutorialData.getTitles().length;
             }
         });
+
+        // set up the pager indicator
+        UnderlinePageIndicator pagerIndicator = (UnderlinePageIndicator)findViewById(R.id.pager_indicator);
+
+        pagerIndicator.setViewPager(mViewPager);
+        pagerIndicator.setSelectedColor(getResources().getColor(R.color.indicator_foreground));
+        pagerIndicator.setBackgroundColor(getResources().getColor(R.color.indicator_background));
+        //pagerIndicator.setFadeDelay(1000);
+        //pagerIndicator.setFadeLength(1000);
+        pagerIndicator.setFades(false);
+
+
     }
 
     @Override

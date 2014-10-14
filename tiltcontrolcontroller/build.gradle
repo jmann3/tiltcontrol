@@ -31,10 +31,8 @@ android {
 }
 
 repositories {
-    maven {
-        url "https://repo.commonsware.com.s3.amazonaws.com"
-    }
-    maven { url "http://dl.bintray.com/populov/maven" }
+    maven { url "https://repo.commonsware.com.s3.amazonaws.com"}
+
 }
 
 
@@ -43,7 +41,7 @@ dependencies {
     compile 'com.android.support:support-v4:19.0.0'
     compile "com.android.support:appcompat-v7:19.0.+"
 
-    compile ('com.viewpagerindicator:library:2.4.1') {
+    compile ('com.viewpagerindicator:library:2.4.1@aar') {
         exclude group: 'com.android.support', module:'support-v4'
     }
 
