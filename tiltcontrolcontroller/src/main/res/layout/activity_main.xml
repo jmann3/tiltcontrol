@@ -76,15 +76,19 @@
             android:layout_marginRight="@dimen/card_inset"
             android:layout_marginTop="@dimen/card_inset"
             android:onClick="onClick_startMyGlass"
+            android:visibility="gone"
             android:text="Configure MyGlass" />
 
         <Button
             android:id="@+id/button_EnableTilt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_marginLeft="@dimen/card_inset"
             android:layout_marginRight="@dimen/card_inset"
             android:layout_marginBottom="@dimen/card_inset"
+            android:background="@drawable/overflow_selectable_background"
+            android:textColor="@android:color/white"
             android:onClick="onClick_start"
             android:text="Enable Tilt Control" />
 

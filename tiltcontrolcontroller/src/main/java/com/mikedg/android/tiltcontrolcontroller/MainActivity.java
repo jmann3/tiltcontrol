@@ -1,7 +1,9 @@
 package com.mikedg.android.tiltcontrolcontroller;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -74,8 +76,6 @@ public class MainActivity extends DisplayActivity {
         pagerIndicator.setViewPager(mViewPager);
         pagerIndicator.setSelectedColor(getResources().getColor(R.color.indicator_foreground));
         pagerIndicator.setBackgroundColor(getResources().getColor(R.color.indicator_background));
-        //pagerIndicator.setFadeDelay(1000);
-        //pagerIndicator.setFadeLength(1000);
         pagerIndicator.setFades(false);
 
 
@@ -87,23 +87,19 @@ public class MainActivity extends DisplayActivity {
     }
 
     @Override
+    protected String getActionBarTitle() {
+        return "Tilt Controller";
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
-        mConfigureGlassButton.setEnabled(mShouldStartMyGlass);
-        mEnableGlassControlButton.setEnabled(!mShouldStartMyGlass);
-
-        if (mShouldStartMyGlass) {
-
-            // blur background
-
-            // after short delay show AlertDialog asking if want to connect to Glass
-
-        }
-
         if (mIsWaitingForForceStop == true) {
-            mIsWaitingForForceStop = tryConnecting(this);
-            mEnableGlassControlButton.setText("Disable Tilt Control");
+            mIsWaitingForForceStop = tryConnecting();
+
+            if (mIsWaitingForForceStop == false)
+                mEnableGlassControlButton.setText("Disable Tilt Control");
 
         } else {
             mEnableGlassControlButton.setText("Enable Tilt Control");
@@ -158,7 +154,10 @@ public class MainActivity extends DisplayActivity {
         if (((Button)view).getText().equals("Enable Tilt Control")) {
 
             // button is "Start" button
-            mIsWaitingForForceStop = tryConnecting(this);
+            mIsWaitingForForceStop = tryConnecting();
+
+            if (mIsWaitingForForceStop == false)
+                mEnableGlassControlButton.setText("Disable Tilt Control");
 
         } else {
 

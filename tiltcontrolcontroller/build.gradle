@@ -1,5 +1,14 @@
 apply plugin: 'android'
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.jakewharton.hugo:hugo-plugin:1.1.0'
+    }
+}
+
 android {
     compileSdkVersion 19
     buildToolsVersion "19.1.0"
@@ -51,3 +60,5 @@ dependencies {
 
     compile project(':btcomm')
 }
+
+apply plugin: 'hugo'

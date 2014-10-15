@@ -8,7 +8,7 @@
 
     <item
         android:id="@+id/diagnotic_item"
-        android:title="diagnostics"
+        android:title="Diagnostics"
         android:orderInCategory="102"
         android:showAsAction="never" >
     </item>

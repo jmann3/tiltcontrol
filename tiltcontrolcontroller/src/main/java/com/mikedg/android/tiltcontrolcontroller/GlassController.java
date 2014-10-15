@@ -1,12 +1,16 @@
 package com.mikedg.android.tiltcontrolcontroller;
 
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.util.Log;
 
 import com.google.glass.companion.GlassProtocol;
 import com.google.glass.companion.Proto;
+import com.mikedg.android.tiltcontrolcontroller.threads.NotifyingThread;
+import com.mikedg.android.tiltcontrolcontroller.threads.ThreadCompleteListener;
 import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
@@ -17,38 +21,56 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import hugo.weaving.DebugLog;
+
 /**
  * Created by Michael on 6/23/2014.
  */
 public class GlassController {
     public static final UUID SECURE_UUID = UUID.fromString("F15CC914-E4BC-45CE-9930-CB7695385850");
-    private final BluetoothAdapter mBtAdapter;
+
 
     //Move subs here
     private OutputStream outputStream;
     private BluetoothSocket socket;
+    public BluetoothDevice device;
 
     private static final String[] authorizedNames = new String[]{"mike digiovanni's glass", "andy lin's glass", "geoff cubitt's glass"};
 
-    public BluetoothDevice device; //FIXME: hack
 
-    public GlassController() {
+
+    @DebugLog
+    public GlassController(ThreadCompleteListener threadCompleteListener) {
+
+        NotifyingThread thread1 = new NotifyingThread() {
+
+            @Override
+            public void doRun() {
+
+
+            }
+        };
+        thread1.addListener(threadCompleteListener);
+        thread1.start();
+
+
+        final BluetoothAdapter mBtAdapter;
 
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
         Set<BluetoothDevice> devices = mBtAdapter.getBondedDevices();
-        for (BluetoothDevice device : devices) {
-            Log.d("BTD", "type:" + device.getType() + " " + device.getName() + "remove dev is not null for self address");
+        for (BluetoothDevice foundDevice : devices) {
+            Log.d("BTD", "type:" + foundDevice.getType() + " " + foundDevice.getName() + "remove dev is not null for self address");
 
             // TODO: use another device and check name
-            String deviceName = device.getName().toLowerCase();
+            String deviceName = foundDevice.getName().toLowerCase();
 
             //if (Arrays.asList(authorizedNames).contains((device.getName()).toLowerCase())) {
 
             // check if deviceName ends with "glass" or ends with glass a space and 4 digits
             if (deviceName.endsWith("glass") || deviceName.matches(".*glass \\d{4}$")) {
 
-                this.device = device;
+                device = foundDevice;
 
                 Log.d("DEVICE", "device is " + device.getName());
 
@@ -88,6 +110,8 @@ public class GlassController {
 
             }
         }
+
+
 //See for better connection detalis https://github.com/wearscript/wearscript-android/blob/master/WearScript/src/main/java/com/dappervision/wearscript/glassbt/GlassDevice.java
 //        https://github.com/wearscript/wearscript-android/blob/master/WearScript/src/main/java/com/dappervision/wearscript/glassbt/GlassMessagingUtil.java
 

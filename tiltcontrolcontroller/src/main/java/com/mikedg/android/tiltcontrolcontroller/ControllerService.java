@@ -5,9 +5,11 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 
 import com.mikedg.android.btcomm.Configuration;
 import com.mikedg.android.btcomm.connector.BluetoothClientConnector;
@@ -15,6 +17,7 @@ import com.mikedg.android.btcomm.connector.BluetoothConnector;
 import com.mikedg.android.btcomm.messages.SimWinkMessage;
 import com.mikedg.android.tiltcontrolcontroller.events.SimWinkEvent;
 import com.mikedg.android.tiltcontrolcontroller.events.StatusMessageEvent;
+import com.mikedg.android.tiltcontrolcontroller.threads.ThreadCompleteListener;
 import com.squareup.otto.Subscribe;
 
 /**
@@ -22,7 +25,7 @@ import com.squareup.otto.Subscribe;
  * Also creates Bluetooth connection to Glass device, to receive commands.
  */
 
-public class ControllerService extends Service {
+public class ControllerService extends Service implements ThreadCompleteListener {
     private static final int ONGOING_NOTIFICATION_ID = 21345;
     private GlassController mGlassController;
     private CommandReceiver mCommandReceiver;
@@ -55,6 +58,7 @@ public class ControllerService extends Service {
         mGlassController.disconnect();
 
         Configuration.bus.post(new StatusMessageEvent("Stopped service."));
+
     }
 
     @Override
@@ -69,10 +73,10 @@ public class ControllerService extends Service {
         super.onCreate();
 
         Application.getBus().register(this);
-
         makeForeground();
 
-        mGlassController = new GlassController();
+        mGlassController = new GlassController(this);
+
         Application.getBus().register(mGlassController);
 
         mCommandReceiver = new CommandReceiver();
@@ -81,7 +85,16 @@ public class ControllerService extends Service {
 
         mBluetoothConnector = new BluetoothClientConnector();
         mBluetoothConnector.connect(mGlassController.device);
+
+        Log.d("GLASS_CONTROLLER", "glass controller is " + mGlassController);
+
         Configuration.bus.post(new StatusMessageEvent("Started service."));
+    }
+
+    @Override
+    public void notifyOfThreadComplete(Thread thread) {
+
+
     }
 
     private void makeForeground() {

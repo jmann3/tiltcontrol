@@ -64,11 +64,16 @@ public class DiagnosticActivity extends DisplayActivity implements DrawerFragmen
     }
 
     @Override
+    protected String getActionBarTitle() {
+        return "Diagnostic Panel";
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
         if (mIsWaitingForForceStop == true) {
-            mIsWaitingForForceStop = tryConnecting(this);
+            mIsWaitingForForceStop = tryConnecting();
         }
     }
 
@@ -123,7 +128,7 @@ public class DiagnosticActivity extends DisplayActivity implements DrawerFragmen
 
     public void onClick_start(View view) {
 
-        mIsWaitingForForceStop = tryConnecting(this);
+        mIsWaitingForForceStop = tryConnecting();
         Log.d("IsWaitingForForceStop", "isWaitingForForceStop is " + mIsWaitingForForceStop);
     }
 

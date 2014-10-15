@@ -1,6 +1,7 @@
 package com.mikedg.android.tiltcontrolcontroller;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -15,7 +16,7 @@ import com.mikedg.android.tiltcontrolcontroller.events.SimWinkEvent;
 public abstract class DisplayActivity extends FragmentActivity {
 
     protected static boolean mIsWaitingForForceStop = false;
-    protected static boolean mShouldStartMyGlass = true;
+    protected static boolean mShouldStartMyGlass = false;
     protected static final String PACKAGE_MY_GLASS = "com.google.glass.companion";
 
     @Override
@@ -23,29 +24,45 @@ public abstract class DisplayActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResourceId());
 
+        setTitle(getActionBarTitle());
+
         com.mikedg.android.btcomm.Configuration.bus.register(this);
     }
 
     protected abstract int getLayoutResourceId();
 
+    protected abstract String getActionBarTitle();
 
-    public boolean tryConnecting(Context context) {
+
+    public boolean tryConnecting() {
         // check if myglass is running
-        if (AppUtil.isMyGlassRunning(context)) {
+        if (AppUtil.isMyGlassRunning(this)) {
 
             // show the Application Manager screen for the MyGlass app so the user can kill it
-            AppUtil.startMyGlassAppInfo(context);
+            AppUtil.startMyGlassAppInfo(this);
 
             // display toast to tell user what to do
-            Toast.makeText(context, "Press \"Force Stop\"", Toast.LENGTH_LONG).show();
-
-            //ControllerService.startService(context);
+            Toast.makeText(this, "Press \"Force Stop\"", Toast.LENGTH_LONG).show();
 
             return true;
         } else {
-            Log.i(context.getClass().getSimpleName(), "MyGlass app is not running");
+            Log.i(this.getClass().getSimpleName(), "MyGlass app is not running");
 
-            ControllerService.startService(context);
+            final Context tContext = this;
+
+            ControllerService.startService(tContext);
+
+            new AsyncTask<Void, Void, Void>() {
+
+                @Override
+                protected Void doInBackground(Void... params) {
+
+                    // stop the service
+
+
+                    return null;
+                }
+            }.execute();
 
             return false;
         }
@@ -60,6 +77,19 @@ public abstract class DisplayActivity extends FragmentActivity {
     }
 
     public void onClick_stop(View view) {
-        ControllerService.stopService(this);
+
+        final Context tContext = this;
+
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+
+                // stop the service
+                ControllerService.stopService(tContext);
+
+                return null;
+            }
+        }.execute();
     }
 }

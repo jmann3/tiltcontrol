@@ -3,4 +3,8 @@
     <color name="card_background">#b2ebf2</color>
     <color name="indicator_foreground">#0097a7</color>
     <color name="indicator_background">#80deea</color>
+
+    <color name="windowBackground">#00acc1</color>
+    <color name="popupBackground_light">#80deea</color>
+    <color name="popupBackground_dark">#26c6da</color>
 </resources>

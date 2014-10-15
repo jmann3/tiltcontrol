@@ -1,19 +1,53 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="AppTheme" parent="android:Theme.Holo.Light">
         <!-- Customize your theme here. -->
         <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
+        <item name="android:itemTextAppearance">@android:color/white</item>
+
         <item name="android:fitsSystemWindows">true</item> <!-- possibly problematic with toasts, https://code.google.com/p/android/issues/detail?id=63653 -->
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:windowBackground">@color/windowBackground</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        <!--<item name="android:actionBarWidgetTheme">@style/Theme.DropDown</item> -->
+
+        <item name="android:actionBarItemBackground">@drawable/overflow_selectable_background</item>
     </style>
 
     <style name="MyActionBar"
         parent="android:Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/windowBackground</item>
+        <item name="android:titleTextStyle">@style/ActionBar.Text</item>
     </style>
 
-    <color name="windowBackground">#00acc1</color>
+    <style name="ActionBar.Text"
+        parent="@android:style/TextAppearance" >
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="PopupMenu"
+        parent="@android:style/Widget.Holo.ListPopupWindow" >
+        <item name="android:popupBackground">@color/popupBackground_dark</item>
+    </style>
+
+
+
+    <!--<style name="Theme.DropDown"-->
+        <!--parent="android:style/Theme.Holo">-->
+        <!--<item name="android:dropDownListViewStyle">@style/TiltDropDownListView</item>-->
+    <!--</style>-->
+
+    <!--<style name="TiltDropDownListView"-->
+        <!--parent="android:style/Widget.Holo.ListView.DropDown">-->
+        <!--<item name="android:listSelector">@drawable/overflow_selectable_background</item>-->
+    <!--</style>-->
+
+
+
+
+
+
 </resources>
