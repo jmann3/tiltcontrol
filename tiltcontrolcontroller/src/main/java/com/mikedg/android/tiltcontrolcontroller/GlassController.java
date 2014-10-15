@@ -160,7 +160,7 @@ public class GlassController {
 //        GlassProtocol.writeMessage(GlassMessagingUtil.createTimelineMessage("hell"), outputStream); //works
             outputStream.flush();
         } else {
-            throw new RuntimeException("outputStream is null");
+            throw new IOException("outputStream is null");
         }
     }
 

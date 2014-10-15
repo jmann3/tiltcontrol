@@ -12,6 +12,7 @@ import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.mikedg.android.btcomm.Configuration;
 import com.mikedg.android.btcomm.connector.BluetoothClientConnector;
@@ -41,7 +42,6 @@ public class ControllerService extends Service implements ThreadCompleteListener
 
     public static final void stopService(Context context) {
         Intent i = new Intent(context, ControllerService.class);
-
         context.stopService(i);
     }
 

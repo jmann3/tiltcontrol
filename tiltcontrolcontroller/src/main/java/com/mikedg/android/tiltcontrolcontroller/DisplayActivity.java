@@ -48,9 +48,7 @@ public abstract class DisplayActivity extends FragmentActivity {
         } else {
             Log.i(this.getClass().getSimpleName(), "MyGlass app is not running");
 
-            final Context tContext = this;
-
-            ControllerService.startService(tContext);
+            ControllerService.startService(this);
 
             return false;
         }
