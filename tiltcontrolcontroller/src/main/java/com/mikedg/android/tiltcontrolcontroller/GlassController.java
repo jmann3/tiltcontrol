@@ -47,37 +47,30 @@ public class GlassController {
             @Override
             public void doRun() {
 
+                final BluetoothAdapter mBtAdapter;
 
-            }
-        };
-        thread1.addListener(threadCompleteListener);
-        thread1.start();
+                mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
+                Set<BluetoothDevice> devices = mBtAdapter.getBondedDevices();
+                for (BluetoothDevice foundDevice : devices) {
+                    Log.d("BTD", "type:" + foundDevice.getType() + " " + foundDevice.getName() + "remove dev is not null for self address");
 
-        final BluetoothAdapter mBtAdapter;
+                    // TODO: use another device and check name
+                    String deviceName = foundDevice.getName().toLowerCase();
 
-        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+                    //if (Arrays.asList(authorizedNames).contains((device.getName()).toLowerCase())) {
 
-        Set<BluetoothDevice> devices = mBtAdapter.getBondedDevices();
-        for (BluetoothDevice foundDevice : devices) {
-            Log.d("BTD", "type:" + foundDevice.getType() + " " + foundDevice.getName() + "remove dev is not null for self address");
+                    // check if deviceName ends with "glass" or ends with glass a space and 4 digits
+                    if (deviceName.endsWith("glass") || deviceName.matches(".*glass \\d{4}$")) {
 
-            // TODO: use another device and check name
-            String deviceName = foundDevice.getName().toLowerCase();
+                        device = foundDevice;
 
-            //if (Arrays.asList(authorizedNames).contains((device.getName()).toLowerCase())) {
+                        Log.d("DEVICE", "device is " + device.getName());
 
-            // check if deviceName ends with "glass" or ends with glass a space and 4 digits
-            if (deviceName.endsWith("glass") || deviceName.matches(".*glass \\d{4}$")) {
-
-                device = foundDevice;
-
-                Log.d("DEVICE", "device is " + device.getName());
-
-                try {
-                    socket = device.createRfcommSocketToServiceRecord(SECURE_UUID);
-                    socket.connect();
-                    outputStream = socket.getOutputStream();
+                        try {
+                            socket = device.createRfcommSocketToServiceRecord(SECURE_UUID);
+                            socket.connect();
+                            outputStream = socket.getOutputStream();
 
 //                    Thread t1 = new Thread() {
 //                        public void run() {
@@ -92,24 +85,31 @@ public class GlassController {
 //                    };
 //                    t1.start();
 
-                    Thread t2 = new Thread() {
-                        public void run() {
-                            try {
-                                readMessages(socket);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            Thread t2 = new Thread() {
+                                public void run() {
+                                    try {
+                                        readMessages(socket);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
 
+                                }
+                            };
+                            t2.start();
+                            break;
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    };
-                    t2.start();
-                    break;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
+                    }
+                }
             }
-        }
+        };
+        thread1.addListener(threadCompleteListener);
+        thread1.start();
+
+
+
 
 
 //See for better connection detalis https://github.com/wearscript/wearscript-android/blob/master/WearScript/src/main/java/com/dappervision/wearscript/glassbt/GlassDevice.java

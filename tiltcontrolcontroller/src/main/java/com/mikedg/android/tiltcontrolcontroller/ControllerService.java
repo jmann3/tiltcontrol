@@ -6,7 +6,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -77,24 +79,28 @@ public class ControllerService extends Service implements ThreadCompleteListener
 
         mGlassController = new GlassController(this);
 
-        Application.getBus().register(mGlassController);
-
-        mCommandReceiver = new CommandReceiver();
-        Application.getBus().register(mCommandReceiver);
-
-
-        mBluetoothConnector = new BluetoothClientConnector();
-        mBluetoothConnector.connect(mGlassController.device);
-
-        Log.d("GLASS_CONTROLLER", "glass controller is " + mGlassController);
-
-        Configuration.bus.post(new StatusMessageEvent("Started service."));
     }
 
     @Override
     public void notifyOfThreadComplete(Thread thread) {
 
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
 
+                Application.getBus().register(mGlassController);
+
+                mCommandReceiver = new CommandReceiver();
+                Application.getBus().register(mCommandReceiver);
+
+
+                mBluetoothConnector = new BluetoothClientConnector();
+                mBluetoothConnector.connect(mGlassController.device);
+
+                Configuration.bus.post(new StatusMessageEvent("Started service."));
+            }
+        });
     }
 
     private void makeForeground() {

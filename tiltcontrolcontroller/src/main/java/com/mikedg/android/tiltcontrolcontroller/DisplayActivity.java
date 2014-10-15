@@ -52,18 +52,6 @@ public abstract class DisplayActivity extends FragmentActivity {
 
             ControllerService.startService(tContext);
 
-            new AsyncTask<Void, Void, Void>() {
-
-                @Override
-                protected Void doInBackground(Void... params) {
-
-                    // stop the service
-
-
-                    return null;
-                }
-            }.execute();
-
             return false;
         }
     }
