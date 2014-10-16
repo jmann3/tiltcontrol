@@ -1,19 +1,26 @@
 package com.mikedg.android.tiltcontrolcontroller;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.Button;
 
+import com.mikedg.android.btcomm.connector.BluetoothConnector;
+import com.mikedg.android.tiltcontrolcontroller.events.ConnectionState;
+import com.mikedg.android.tiltcontrolcontroller.events.StatusMessageEvent;
+import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.IconPageIndicator;
 import com.viewpagerindicator.LinePageIndicator;
 import com.viewpagerindicator.UnderlinePageIndicator;
@@ -29,6 +36,8 @@ public class MainActivity extends DisplayActivity {
     private Button mEnableGlassControlButton;
     private ViewPager mViewPager;
     private ArrayList<HashMap> mTutorialPages;
+
+    private int mState = 0;
 
 
     @Override
@@ -78,7 +87,6 @@ public class MainActivity extends DisplayActivity {
         pagerIndicator.setBackgroundColor(getResources().getColor(R.color.indicator_background));
         pagerIndicator.setFades(false);
 
-
     }
 
     @Override
@@ -92,11 +100,22 @@ public class MainActivity extends DisplayActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
+        // if Bluetooth is connected (by Diagnostic Activity) toggle button state as required
+        // TODO: if state is not 3 then show "Enable" title
+        if (mState != 3)
+            mEnableGlassControlButton.setText("Enable Tilt Control");
+
         if (mIsWaitingForForceStop == true) {
-            mIsWaitingForForceStop = tryConnecting();
+            mIsWaitingForForceStop = tryConnecting(this);
 
             if (mIsWaitingForForceStop == false)
                 mEnableGlassControlButton.setText("Disable Tilt Control");
@@ -151,10 +170,12 @@ public class MainActivity extends DisplayActivity {
 
     public void onClick_start(View view) {
 
+        mState = 0;
+
         if (((Button)view).getText().equals("Enable Tilt Control")) {
 
             // button is "Start" button
-            mIsWaitingForForceStop = tryConnecting();
+            mIsWaitingForForceStop = tryConnecting(this);
 
             if (mIsWaitingForForceStop == false)
                 mEnableGlassControlButton.setText("Disable Tilt Control");
@@ -176,4 +197,15 @@ public class MainActivity extends DisplayActivity {
         mShouldStartMyGlass = false;
     }
 
+    @Subscribe public void statusMessageAvailable(StatusMessageEvent statusMessageEvent) {
+
+        if (statusMessageEvent.getMessage().equals("Started service.")) {
+            // connection complete
+            AppUtil.stopActivityIndicator();
+        }
+    }
+
+    @Subscribe public void stateUpdated(ConnectionState connectionState) {
+        mState = connectionState.getState();
+    }
 }

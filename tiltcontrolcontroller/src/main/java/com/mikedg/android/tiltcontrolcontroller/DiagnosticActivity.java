@@ -73,7 +73,7 @@ public class DiagnosticActivity extends DisplayActivity implements DrawerFragmen
         super.onResume();
 
         if (mIsWaitingForForceStop == true) {
-            mIsWaitingForForceStop = tryConnecting();
+            mIsWaitingForForceStop = tryConnecting(this);
         }
     }
 
@@ -128,7 +128,7 @@ public class DiagnosticActivity extends DisplayActivity implements DrawerFragmen
 
     public void onClick_start(View view) {
 
-        mIsWaitingForForceStop = tryConnecting();
+        mIsWaitingForForceStop = tryConnecting(this);
         Log.d("IsWaitingForForceStop", "isWaitingForForceStop is " + mIsWaitingForForceStop);
     }
 
@@ -245,5 +245,4 @@ public class DiagnosticActivity extends DisplayActivity implements DrawerFragmen
 
         return super.onOptionsItemSelected(item);
     }
-
 }

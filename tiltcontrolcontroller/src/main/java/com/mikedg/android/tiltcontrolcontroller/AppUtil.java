@@ -1,12 +1,17 @@
 package com.mikedg.android.tiltcontrolcontroller;
 
+import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.provider.Settings;
+import android.view.WindowManager;
 
 import java.util.List;
 
@@ -17,6 +22,9 @@ public class AppUtil {
     // utility method used to start sub activity
     private static final String SCHEME = "package";
     private static final String PACKAGE_MY_GLASS = "com.google.glass.companion";
+
+    private static ProgressDialog mProgressDialog = null;
+    private static boolean mProgressDisplayed = false;
 
     public static void startMyGlassAppInfo(Context context) {
         // Create intent to start new activity
@@ -61,6 +69,38 @@ public class AppUtil {
 
         } catch (ActivityNotFoundException e ) {
 
+        }
+    }
+
+    public static void startActivityIndicator(final Context context, final String message) {
+        if (context != null && !mProgressDisplayed) {
+            mProgressDialog = new ProgressDialog(context);
+            mProgressDialog.setIndeterminate(true);
+            mProgressDialog.setMessage(message);
+            mProgressDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+            mProgressDialog.setCanceledOnTouchOutside(true);
+//            mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//                @Override
+//                public void onCancel(DialogInterface dialogInterface) {
+//                    stopActivityIndicator();
+//                    if (context instanceof Activity) {
+//                        ((Activity) context).onBackPressed();
+//                    }
+//                }
+//            });
+
+            mProgressDialog.show();
+            mProgressDisplayed = true;
+        }
+    }
+
+    public static void stopActivityIndicator() {
+        if (mProgressDisplayed) {
+            mProgressDisplayed = false;
+            if (mProgressDialog != null && mProgressDialog.isShowing()) {
+                mProgressDialog.dismiss();
+                mProgressDialog = null;
+            }
         }
     }
 

@@ -18,6 +18,7 @@ import com.mikedg.android.btcomm.Configuration;
 import com.mikedg.android.btcomm.connector.BluetoothClientConnector;
 import com.mikedg.android.btcomm.connector.BluetoothConnector;
 import com.mikedg.android.btcomm.messages.SimWinkMessage;
+import com.mikedg.android.tiltcontrolcontroller.events.ConnectionState;
 import com.mikedg.android.tiltcontrolcontroller.events.SimWinkEvent;
 import com.mikedg.android.tiltcontrolcontroller.events.StatusMessageEvent;
 import com.mikedg.android.tiltcontrolcontroller.threads.ThreadCompleteListener;
@@ -99,6 +100,9 @@ public class ControllerService extends Service implements ThreadCompleteListener
                 mBluetoothConnector.connect(mGlassController.device);
 
                 Configuration.bus.post(new StatusMessageEvent("Started service."));
+
+                Configuration.bus.post(new ConnectionState(mBluetoothConnector.getState()));
+
             }
         });
     }
@@ -182,4 +186,6 @@ public class ControllerService extends Service implements ThreadCompleteListener
         mNotificationManager.notify(ONGOING_NOTIFICATION_ID, builder.build());
 
     }
+
+
 }

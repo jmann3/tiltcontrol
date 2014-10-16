@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" /> <!-- Connection to Glass -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- Connection to Glass -->
     <uses-permission android:name="android.permission.GET_TASKS" /> <!-- Helps figure out if MYGLASS is running -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:name=".Application"

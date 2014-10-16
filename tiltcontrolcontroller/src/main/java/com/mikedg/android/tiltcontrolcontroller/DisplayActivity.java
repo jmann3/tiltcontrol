@@ -1,6 +1,9 @@
 package com.mikedg.android.tiltcontrolcontroller;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -17,7 +20,7 @@ public abstract class DisplayActivity extends FragmentActivity {
 
     protected static boolean mIsWaitingForForceStop = false;
     protected static boolean mShouldStartMyGlass = false;
-    protected static final String PACKAGE_MY_GLASS = "com.google.glass.companion";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,8 @@ public abstract class DisplayActivity extends FragmentActivity {
         setTitle(getActionBarTitle());
 
         com.mikedg.android.btcomm.Configuration.bus.register(this);
+
+
     }
 
     protected abstract int getLayoutResourceId();
@@ -34,7 +39,7 @@ public abstract class DisplayActivity extends FragmentActivity {
     protected abstract String getActionBarTitle();
 
 
-    public boolean tryConnecting() {
+    public boolean tryConnecting(Context context) {
         // check if myglass is running
         if (AppUtil.isMyGlassRunning(this)) {
 
@@ -47,6 +52,9 @@ public abstract class DisplayActivity extends FragmentActivity {
             return true;
         } else {
             Log.i(this.getClass().getSimpleName(), "MyGlass app is not running");
+
+            if (context instanceof MainActivity)
+                AppUtil.startActivityIndicator(context, "Connecting to Glass");
 
             ControllerService.startService(this);
 
