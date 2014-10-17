@@ -61,7 +61,7 @@ public class ControllerService extends Service implements ThreadCompleteListener
         mGlassController.disconnect();
 
         Configuration.bus.post(new StatusMessageEvent("Stopped service."));
-
+        Log.d("Service stopped", "ControllerService stopped");
     }
 
     @Override

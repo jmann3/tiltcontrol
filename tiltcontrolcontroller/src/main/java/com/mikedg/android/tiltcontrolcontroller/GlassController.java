@@ -38,7 +38,6 @@ public class GlassController {
     private static final String[] authorizedNames = new String[]{"mike digiovanni's glass", "andy lin's glass", "geoff cubitt's glass"};
 
 
-
     @DebugLog
     public GlassController(ThreadCompleteListener threadCompleteListener) {
 
@@ -69,21 +68,37 @@ public class GlassController {
 
                         try {
                             socket = device.createRfcommSocketToServiceRecord(SECURE_UUID);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
                             socket.connect();
+                        } catch (IOException connectException) {
+                            // Unable to connect; close the socket and get out
+                            try {
+                                socket.close();
+                            } catch (IOException closeException) {
+                                closeException.printStackTrace();
+                                return;
+                            }
+                        }
+
+                        try {
                             outputStream = socket.getOutputStream();
 
-//                    Thread t1 = new Thread() {
-//                        public void run() {
-//                            try {
-//                                writeMessages(socket);
-//                            } catch (IOException e) {
-//                                e.printStackTrace();
-//                            }
-//
-//                        }
-//
-//                    };
-//                    t1.start();
+        //                    Thread t1 = new Thread() {
+        //                        public void run() {
+        //                            try {
+        //                                writeMessages(socket);
+        //                            } catch (IOException e) {
+        //                                e.printStackTrace();
+        //                            }
+        //
+        //                        }
+        //
+        //                    };
+        //                    t1.start();
 
                             Thread t2 = new Thread() {
                                 public void run() {
@@ -98,6 +113,7 @@ public class GlassController {
                             t2.start();
                             break;
                         } catch (IOException e) {
+
                             e.printStackTrace();
                         }
 
