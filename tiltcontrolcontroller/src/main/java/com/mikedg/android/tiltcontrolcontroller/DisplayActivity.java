@@ -30,8 +30,6 @@ public abstract class DisplayActivity extends FragmentActivity {
         setTitle(getActionBarTitle());
 
         com.mikedg.android.btcomm.Configuration.bus.register(this);
-
-
     }
 
     protected abstract int getLayoutResourceId();

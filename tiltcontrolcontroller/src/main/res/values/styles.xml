@@ -5,14 +5,13 @@
         <!-- Customize your theme here. -->
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:actionMenuTextColor">@android:color/white</item>
-        <item name="android:itemTextAppearance">@android:color/white</item>
+        <item name="android:itemTextAppearance">@style/TextAppearance</item>
 
-        <item name="android:fitsSystemWindows">true</item> <!-- possibly problematic with toasts, https://code.google.com/p/android/issues/detail?id=63653 -->
-        <item name="android:windowTranslucentStatus">true</item>
+        <!--<item name="android:fitsSystemWindows">true</item> &lt;!&ndash; possibly problematic with toasts, https://code.google.com/p/android/issues/detail?id=63653 &ndash;&gt;-->
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:windowBackground">@color/windowBackground</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
-        <!--<item name="android:actionBarWidgetTheme">@style/Theme.DropDown</item> -->
 
         <item name="android:actionBarItemBackground">@drawable/overflow_selectable_background</item>
     </style>
@@ -33,21 +32,8 @@
         <item name="android:popupBackground">@color/popupBackground_dark</item>
     </style>
 
-
-
-    <!--<style name="Theme.DropDown"-->
-        <!--parent="android:style/Theme.Holo">-->
-        <!--<item name="android:dropDownListViewStyle">@style/TiltDropDownListView</item>-->
-    <!--</style>-->
-
-    <!--<style name="TiltDropDownListView"-->
-        <!--parent="android:style/Widget.Holo.ListView.DropDown">-->
-        <!--<item name="android:listSelector">@drawable/overflow_selectable_background</item>-->
-    <!--</style>-->
-
-
-
-
-
+    <style name="TextAppearance">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 
 </resources>

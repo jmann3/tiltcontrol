@@ -95,7 +95,6 @@ public class ControllerService extends Service implements ThreadCompleteListener
                 mCommandReceiver = new CommandReceiver();
                 Application.getBus().register(mCommandReceiver);
 
-
                 mBluetoothConnector = new BluetoothClientConnector();
                 mBluetoothConnector.connect(mGlassController.device);
 
