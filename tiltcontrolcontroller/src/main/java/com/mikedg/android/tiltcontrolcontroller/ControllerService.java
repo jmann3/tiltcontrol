@@ -54,6 +54,8 @@ public class ControllerService extends Service implements ThreadCompleteListener
     public void onDestroy() {
         super.onDestroy();
 
+        mBluetoothConnector.stop();
+
         Application.getBus().unregister(this);
         Application.getBus().unregister(mGlassController);
         Application.getBus().unregister(mCommandReceiver);

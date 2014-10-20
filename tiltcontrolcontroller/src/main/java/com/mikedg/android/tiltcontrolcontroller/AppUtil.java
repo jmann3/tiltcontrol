@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.provider.Settings;
 import android.view.WindowManager;
@@ -102,6 +104,21 @@ public class AppUtil {
                 mProgressDialog = null;
             }
         }
+    }
+
+    public static AlertDialog showGlobalAlertDialog(Context context, final String title, final String message, DialogInterface.OnClickListener onClick) {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context, android.R.style.Theme_Holo_Light_Dialog);
+        AlertDialog dialog = alertBuilder
+                .setTitle(title)
+                .setMessage(message)
+                .setCancelable(true)
+                .setNeutralButton("Okay", onClick)
+                .create();
+        dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+
+        return dialog;
     }
 
 }

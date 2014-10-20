@@ -273,7 +273,9 @@ public abstract class BluetoothConnector {
                 try {
                     // Read from the InputStream
                     //bytes = mmInStream.read(buffer);
+                    Log.i(TAG, "before size = mInStream.readInt()");
                     size = mmInStream.readInt();
+                    Log.i(TAG, "after size = mInStream.readInt()");
                     if (size > 0) {
                         buffer = new byte[size];
                         int i = 0;
@@ -291,7 +293,7 @@ public abstract class BluetoothConnector {
                         messageReceived(buffer);
 
                     } else {
-                        System.out.println("****Wtf size is:" + size);
+                        Log.i(TAG, "****Wtf size is:" + size);
                     }
                 } catch (IOException e) {
                     Log.e(TAG, "disconnected", e);

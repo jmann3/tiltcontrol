@@ -1,7 +1,11 @@
 package com.mikedg.android.tiltcontrolcontroller;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
@@ -20,6 +24,7 @@ public abstract class DisplayActivity extends FragmentActivity {
 
     protected static boolean mIsWaitingForForceStop = false;
     protected static boolean mShouldStartMyGlass = false;
+    public static int ENABLE_BLUETOOTH = 100;
 
 
     @Override
@@ -83,5 +88,28 @@ public abstract class DisplayActivity extends FragmentActivity {
                 return null;
             }
         }.execute();
+    }
+
+    protected boolean isBluetoothAvailableAndEnabled() {
+
+        // check if wifi is connected
+        BluetoothAdapter blueToothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (blueToothAdapter == null) {
+            // device does not support bluetooth
+            AppUtil.showGlobalAlertDialog(this, "Warning", "Please use a device which supports bluetooth", null);
+            return false;
+        } else {
+            if (!blueToothAdapter.isEnabled()) {
+                // bluetooth is not enabled
+
+                // create intent to start bluetooth
+                Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBTIntent, ENABLE_BLUETOOTH);
+
+                return false;
+            }
+        }
+
+        return true;
     }
 }

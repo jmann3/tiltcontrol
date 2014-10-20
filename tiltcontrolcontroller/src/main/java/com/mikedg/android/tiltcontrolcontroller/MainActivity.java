@@ -170,21 +170,25 @@ public class MainActivity extends DisplayActivity {
 
     public void onClick_start(View view) {
 
-        mState = 0;
+        // check for bluetooth connectivity
+        if (isBluetoothAvailableAndEnabled()) {
 
-        if (((Button)view).getText().equals("Enable Tilt Control")) {
+            mState = 0;
 
-            // button is "Start" button
-            mIsWaitingForForceStop = tryConnecting(this);
+            if (((Button) view).getText().equals("Enable Tilt Control")) {
 
-            if (mIsWaitingForForceStop == false)
-                mEnableGlassControlButton.setText("Disable Tilt Control");
+                // button is "Start" button
+                mIsWaitingForForceStop = tryConnecting(this);
 
-        } else {
+                if (mIsWaitingForForceStop == false)
+                    mEnableGlassControlButton.setText("Disable Tilt Control");
 
-            // button is "Stop" button
-            onClick_stop(null);
-            mEnableGlassControlButton.setText("Enable Tilt Control");
+            } else {
+
+                // button is "Stop" button
+                onClick_stop(null);
+                mEnableGlassControlButton.setText("Enable Tilt Control");
+            }
         }
     }
 
@@ -207,5 +211,22 @@ public class MainActivity extends DisplayActivity {
 
     @Subscribe public void stateUpdated(ConnectionState connectionState) {
         mState = connectionState.getState();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ENABLE_BLUETOOTH) {
+
+            if (resultCode == RESULT_OK) {
+                // start the connection process again
+                mEnableGlassControlButton.performClick();
+            } else {
+
+                // user has elected not to enable bluetooth
+                AppUtil.showGlobalAlertDialog(this, "Warning", "Bluetooth must be enabled to connect to Glass", null);
+            }
+        }
     }
 }
