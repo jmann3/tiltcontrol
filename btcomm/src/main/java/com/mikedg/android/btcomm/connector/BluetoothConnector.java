@@ -34,6 +34,7 @@ import org.json.JSONException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.UUID;
 
 /**
@@ -93,6 +94,7 @@ public abstract class BluetoothConnector {
      */
     protected synchronized void setState(final int state) {
         if (D) Log.d(TAG, "setState() " + mState + " -> " + state);
+
         mState = state;
 
         //FIXME: Give the new state to the Handler so the UI Activity can update

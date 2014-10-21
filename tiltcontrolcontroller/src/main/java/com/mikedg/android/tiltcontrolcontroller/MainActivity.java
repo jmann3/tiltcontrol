@@ -18,8 +18,8 @@ import android.view.ViewConfiguration;
 import android.widget.Button;
 
 import com.mikedg.android.btcomm.connector.BluetoothConnector;
-import com.mikedg.android.tiltcontrolcontroller.events.ConnectionState;
 import com.mikedg.android.tiltcontrolcontroller.events.StatusMessageEvent;
+import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.IconPageIndicator;
 import com.viewpagerindicator.LinePageIndicator;
@@ -103,33 +103,34 @@ public class MainActivity extends DisplayActivity {
     protected void onPause() {
         super.onPause();
 
+        //Application.getBus().unregister(this);
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
+        // enable broadcast reception
+        //Application.getBus().register(this);
+
         // if Bluetooth is connected (by Diagnostic Activity) toggle button state as required
         // TODO: if state is not 3 then show "Enable" title
-        if (mState != 3)
-            mEnableGlassControlButton.setText("Enable Tilt Control");
+//        if (ControllerService.getLastState() != BluetoothConnector.STATE_CONNECTED)
+//            mEnableGlassControlButton.setText("Enable Tilt Control");
+//        else
+//            mEnableGlassControlButton.setText("Disable Tilt Control");
 
-        if (mIsWaitingForForceStop == true) {
+        // check if need to stop the MyGlass app
+        if (mIsWaitingForForceStop == true)
             mIsWaitingForForceStop = tryConnecting(this);
-
-            if (mIsWaitingForForceStop == false)
-                mEnableGlassControlButton.setText("Disable Tilt Control");
-
-        } else {
-            mEnableGlassControlButton.setText("Enable Tilt Control");
-        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        com.mikedg.android.btcomm.Configuration.bus.unregister(this);
+        //com.mikedg.android.btcomm.Configuration.bus.unregister(this);
     }
 
 
@@ -180,14 +181,10 @@ public class MainActivity extends DisplayActivity {
                 // button is "Start" button
                 mIsWaitingForForceStop = tryConnecting(this);
 
-                if (mIsWaitingForForceStop == false)
-                    mEnableGlassControlButton.setText("Disable Tilt Control");
-
             } else {
 
                 // button is "Stop" button
                 onClick_stop(null);
-                mEnableGlassControlButton.setText("Enable Tilt Control");
             }
         }
     }
@@ -209,8 +206,11 @@ public class MainActivity extends DisplayActivity {
         }
     }
 
-    @Subscribe public void stateUpdated(ConnectionState connectionState) {
-        mState = connectionState.getState();
+    @Subscribe public void stateUpdated(BluetoothConnector.ConnectorEvent connectorEvent) {
+        if (connectorEvent.getState() == BluetoothConnector.STATE_CONNECTED)
+            mEnableGlassControlButton.setText("Disable Tilt Control");
+        else
+            mEnableGlassControlButton.setText("Enable Tilt Control");
     }
 
     @Override

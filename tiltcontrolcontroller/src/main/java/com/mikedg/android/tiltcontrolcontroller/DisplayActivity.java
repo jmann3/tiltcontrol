@@ -34,6 +34,19 @@ public abstract class DisplayActivity extends FragmentActivity {
 
         setTitle(getActionBarTitle());
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        com.mikedg.android.btcomm.Configuration.bus.unregister(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         com.mikedg.android.btcomm.Configuration.bus.register(this);
     }
 

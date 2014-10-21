@@ -81,7 +81,6 @@ public class DiagnosticActivity extends DisplayActivity implements DrawerFragmen
     protected void onDestroy() {
         super.onDestroy();
 
-        com.mikedg.android.btcomm.Configuration.bus.unregister(this);
     }
 //
 //    @Override

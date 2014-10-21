@@ -18,10 +18,10 @@ import com.mikedg.android.btcomm.Configuration;
 import com.mikedg.android.btcomm.connector.BluetoothClientConnector;
 import com.mikedg.android.btcomm.connector.BluetoothConnector;
 import com.mikedg.android.btcomm.messages.SimWinkMessage;
-import com.mikedg.android.tiltcontrolcontroller.events.ConnectionState;
 import com.mikedg.android.tiltcontrolcontroller.events.SimWinkEvent;
 import com.mikedg.android.tiltcontrolcontroller.events.StatusMessageEvent;
 import com.mikedg.android.tiltcontrolcontroller.threads.ThreadCompleteListener;
+import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 /**
@@ -35,6 +35,7 @@ public class ControllerService extends Service implements ThreadCompleteListener
     private CommandReceiver mCommandReceiver;
     private BluetoothClientConnector mBluetoothConnector;
     private String mMessages = "";
+    private static int mLastState = 0;
 
     public static final void startService(Context context) {
         Intent i = new Intent(context, ControllerService.class);
@@ -64,6 +65,8 @@ public class ControllerService extends Service implements ThreadCompleteListener
 
         Configuration.bus.post(new StatusMessageEvent("Stopped service."));
         Log.d("Service stopped", "ControllerService stopped");
+
+        mLastState = 0;
     }
 
     @Override
@@ -101,9 +104,6 @@ public class ControllerService extends Service implements ThreadCompleteListener
                 mBluetoothConnector.connect(mGlassController.device);
 
                 Configuration.bus.post(new StatusMessageEvent("Started service."));
-
-                Configuration.bus.post(new ConnectionState(mBluetoothConnector.getState()));
-
             }
         });
     }
@@ -188,5 +188,14 @@ public class ControllerService extends Service implements ThreadCompleteListener
 
     }
 
+    @Subscribe public void stateUpdated(BluetoothConnector.ConnectorEvent connectorEvent) {
+        mLastState = connectorEvent.getState();
+    }
+
+    @Produce
+    public BluetoothConnector.ConnectorEvent GetLatestState() {
+        // Assuming 'lastAnswer' exists.
+        return new BluetoothConnector.ConnectorEvent(mLastState);
+    }
 
 }
