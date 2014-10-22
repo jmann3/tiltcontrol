@@ -203,6 +203,10 @@ public class MainActivity extends DisplayActivity {
         if (statusMessageEvent.getMessage().equals("Started service.")) {
             // connection complete
             AppUtil.stopActivityIndicator();
+        } else if (statusMessageEvent.getMessage().equals("No device found")) {
+            // alert user no Glass devices found
+            AppUtil.stopActivityIndicator();
+            AppUtil.showGlobalAlertDialog(this, "Warning", "No Glass devices were found", null);
         }
     }
 

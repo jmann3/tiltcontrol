@@ -3,6 +3,7 @@ package com.mikedg.android.btcomm.connector;
 import com.mikedg.android.btcomm.messages.CommandMessage;
 import com.mikedg.android.btcomm.messages.PTGCMessage;
 import com.mikedg.android.btcomm.messages.SimWinkMessage;
+import com.mikedg.android.btcomm.messages.StopMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +42,7 @@ public class ConnectorHelper {
 //        register(VolumeMessage.class);
         register(CommandMessage.class);
         register(SimWinkMessage.class);
+        register(StopMessage.class);
     }
     public PTGCMessage getPtgcFromBytes(byte[] buffer) {
         try{

@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
@@ -18,6 +19,7 @@ import com.mikedg.android.btcomm.Configuration;
 import com.mikedg.android.btcomm.connector.BluetoothClientConnector;
 import com.mikedg.android.btcomm.connector.BluetoothConnector;
 import com.mikedg.android.btcomm.messages.SimWinkMessage;
+import com.mikedg.android.btcomm.messages.StopMessage;
 import com.mikedg.android.tiltcontrolcontroller.events.SimWinkEvent;
 import com.mikedg.android.tiltcontrolcontroller.events.StatusMessageEvent;
 import com.mikedg.android.tiltcontrolcontroller.threads.ThreadCompleteListener;
@@ -38,6 +40,7 @@ public class ControllerService extends Service implements ThreadCompleteListener
     private static int mLastState = 0;
 
     public static final void startService(Context context) {
+
         Intent i = new Intent(context, ControllerService.class);
         context.startService(i);
     }
@@ -55,11 +58,21 @@ public class ControllerService extends Service implements ThreadCompleteListener
     public void onDestroy() {
         super.onDestroy();
 
-        mBluetoothConnector.stop();
+        // signal that Glass should stop
+        if (mBluetoothConnector != null) {
+            mBluetoothConnector.write(new StopMessage());
+
+            mBluetoothConnector.stop();
+        }
 
         Application.getBus().unregister(this);
-        Application.getBus().unregister(mGlassController);
-        Application.getBus().unregister(mCommandReceiver);
+
+        try {
+            Application.getBus().unregister(mGlassController);
+            Application.getBus().unregister(mCommandReceiver);
+        } catch (Exception e) {
+            Log.i(ControllerService.class.getSimpleName(), "trying to unregister class that was not registered");
+        }
 
         mGlassController.disconnect();
 
@@ -81,10 +94,16 @@ public class ControllerService extends Service implements ThreadCompleteListener
         super.onCreate();
 
         Application.getBus().register(this);
+
         makeForeground();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
 
         mGlassController = new GlassController(this);
 
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -95,15 +114,20 @@ public class ControllerService extends Service implements ThreadCompleteListener
             @Override
             public void run() {
 
-                Application.getBus().register(mGlassController);
+                if (mGlassController.device != null) {
 
-                mCommandReceiver = new CommandReceiver();
-                Application.getBus().register(mCommandReceiver);
+                    Application.getBus().register(mGlassController);
 
-                mBluetoothConnector = new BluetoothClientConnector();
-                mBluetoothConnector.connect(mGlassController.device);
+                    mCommandReceiver = new CommandReceiver();
+                    Application.getBus().register(mCommandReceiver);
 
-                Configuration.bus.post(new StatusMessageEvent("Started service."));
+                    mBluetoothConnector = new BluetoothClientConnector();
+                    mBluetoothConnector.connect(mGlassController.device);
+
+                    Configuration.bus.post(new StatusMessageEvent("Started service."));
+                } else {
+                    Configuration.bus.post(new StatusMessageEvent("No device found"));
+                }
             }
         });
     }
@@ -171,7 +195,9 @@ public class ControllerService extends Service implements ThreadCompleteListener
 
     @Subscribe
     public void gotStatusMessage(StatusMessageEvent event) {
+
         appendStatus(event.getMessage());
+
     }
 
     @Subscribe

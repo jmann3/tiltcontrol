@@ -13,6 +13,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.WindowManager;
 
 import java.util.List;
@@ -75,6 +76,7 @@ public class AppUtil {
     }
 
     public static void startActivityIndicator(final Context context, final String message) {
+
         if (context != null && !mProgressDisplayed) {
             mProgressDialog = new ProgressDialog(context);
             mProgressDialog.setIndeterminate(true);

@@ -31,10 +31,12 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 
 import com.mikedg.android.btcomm.Configuration;
+import com.mikedg.android.btcomm.connector.BluetoothConnector;
 import com.mikedg.glass.control.inputhandler.InputHandler;
 import com.mikedg.glass.control.inputhandler.MyGlassLoopbackInputHandler;
 import com.mikedg.glass.control.inputhandler.OnStateChangedListener;
@@ -80,6 +82,7 @@ public class GlassControlService extends Service {
     };
     private BTReceiver mBtReceiver;
     private Object mWinkEventReceiver;
+    private Object mStopEventReceiver;
 
     private void enableSensors() {
         L.d("Trying to register sensor listeners");
@@ -90,6 +93,7 @@ public class GlassControlService extends Service {
             L.d("but we are already listening");
         }
     }
+
 
     private void disableSensors() {
         if (mTiltControlListening) {
@@ -171,15 +175,24 @@ public class GlassControlService extends Service {
 
         //Specific app actions to handle
         mWinkEventReceiver = new Object() {
-            @Subscribe
-            public void gotWinkEvent(BTReceiver.WinkEvent event) {
+            @Subscribe public void gotWinkEvent(BTReceiver.WinkEvent event) {
                 L.d("We got a simulated wink");
 
                 winkTriggered(null);
             }
         };
         Configuration.bus.register(mWinkEventReceiver);
+
+        mStopEventReceiver = new Object() {
+            @Subscribe public void gotStopEvent(BTReceiver.StopEvent event){
+                L.d("User has requested Stop");
+
+                disableSensors();
+            }
+        };
+        Configuration.bus.register(mStopEventReceiver);
     }
+
 
     private void winkTriggered(BroadcastReceiver receiver) {
         L.d("And our input handler state is ready, so let's check some more things");
@@ -240,7 +253,7 @@ public class GlassControlService extends Service {
                         turnOff(GlassControlService.this);
                         break;
                     case NOT_READY:
-                        if (mInputHandlerState ==  State.READY) {
+                        if (mInputHandlerState == State.READY) {
                             L.d("input handler went from READY to NOT_READY, that's only expected when we disable the service");
                         }
                         break;
@@ -363,6 +376,7 @@ public class GlassControlService extends Service {
         unregisterReceiver(mPrefsBroadcastReceiver);
 
         Configuration.bus.unregister(mWinkEventReceiver);
+        Configuration.bus.unregister(mStopEventReceiver);
         Configuration.bus.unregister(mBtReceiver);
 
         mToneGenerator.release();

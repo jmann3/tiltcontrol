@@ -78,27 +78,17 @@ public class GlassController {
                             // Unable to connect; close the socket and get out
                             try {
                                 socket.close();
+                                device = null;
+                                return;
                             } catch (IOException closeException) {
                                 closeException.printStackTrace();
+                                device = null;
                                 return;
                             }
                         }
 
                         try {
                             outputStream = socket.getOutputStream();
-
-        //                    Thread t1 = new Thread() {
-        //                        public void run() {
-        //                            try {
-        //                                writeMessages(socket);
-        //                            } catch (IOException e) {
-        //                                e.printStackTrace();
-        //                            }
-        //
-        //                        }
-        //
-        //                    };
-        //                    t1.start();
 
                             Thread t2 = new Thread() {
                                 public void run() {
