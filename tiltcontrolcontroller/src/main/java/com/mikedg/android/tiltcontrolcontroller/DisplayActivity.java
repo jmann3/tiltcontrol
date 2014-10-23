@@ -50,6 +50,14 @@ public abstract class DisplayActivity extends FragmentActivity {
         com.mikedg.android.btcomm.Configuration.bus.register(this);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // stop the service if it is still running
+        onClick_stop(null);
+    }
+
     protected abstract int getLayoutResourceId();
 
     protected abstract String getActionBarTitle();

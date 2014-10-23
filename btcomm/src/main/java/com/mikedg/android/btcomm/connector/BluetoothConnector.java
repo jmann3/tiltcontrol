@@ -244,8 +244,8 @@ public abstract class BluetoothConnector {
      */
     protected class ConnectedThread extends Thread {
         private final BluetoothSocket mmSocket;
-        private final DataInputStream mmInStream;
-        private final DataOutputStream mmOutStream;
+        private DataInputStream mmInStream;
+        private DataOutputStream mmOutStream;
         private boolean mRestartServiceOnConnectionLost = true;
 
         public ConnectedThread(BluetoothSocket socket) {
@@ -333,6 +333,26 @@ public abstract class BluetoothConnector {
 
         public void cancel() {
             mRestartServiceOnConnectionLost = false;
+
+            // close streams
+            if (mmInStream != null) {
+                try {
+                    mmInStream.close();
+                } catch (Exception e) {
+
+                }
+                mmInStream = null;
+            }
+
+            if (mmOutStream != null) {
+                try {
+                    mmOutStream.close();
+                } catch (Exception e) {
+
+                }
+                mmOutStream = null;
+            }
+
             try {
                 mmSocket.close();
             } catch (IOException e) {
