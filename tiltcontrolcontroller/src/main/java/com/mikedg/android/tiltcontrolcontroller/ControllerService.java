@@ -103,7 +103,7 @@ public class ControllerService extends Service implements ThreadCompleteListener
 
         mGlassController = new GlassController(this);
 
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Override

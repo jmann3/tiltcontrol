@@ -73,7 +73,7 @@ public class GlassController {
                         }
 
                         try {
-                            socket.connect();
+                            socket.connect();  // TODO: Socket may be closed
                         } catch (IOException connectException) {
                             // Unable to connect; close the socket and get out
                             try {
