@@ -42,6 +42,9 @@ import com.mikedg.glass.control.inputhandler.MyGlassLoopbackInputHandler;
 import com.mikedg.glass.control.inputhandler.OnStateChangedListener;
 import com.squareup.otto.Subscribe;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class GlassControlService extends Service {
     public static final boolean SHOULD_SIM_KEYS = true;
     public static final boolean SHOULD_SHOW_OVERLAY = false;
@@ -60,6 +63,8 @@ public class GlassControlService extends Service {
     private PowerManager mPowerManager;
     private boolean mTiltControlListening;
     private OnStateChangedListener.State mInputHandlerState = OnStateChangedListener.State.NOT_READY;
+
+    Timer timer;
 
     private BroadcastReceiver mWinkReceiver = new BroadcastReceiver() {
         @Override
@@ -191,6 +196,7 @@ public class GlassControlService extends Service {
             }
         };
         Configuration.bus.register(mStopEventReceiver);
+
     }
 
 
@@ -369,6 +375,10 @@ public class GlassControlService extends Service {
 
     @Override
     public void onDestroy() {
+
+        if (timer != null)
+            timer.cancel();
+
         broadcastStopped();
         mInputHandler.stop();
         unregisterReceiver(mReceiver);

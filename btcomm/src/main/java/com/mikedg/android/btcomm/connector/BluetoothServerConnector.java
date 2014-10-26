@@ -25,8 +25,9 @@ import android.util.Log;
 
 import com.mikedg.android.btcomm.Configuration;
 import com.mikedg.android.btcomm.messages.PTGCMessage;
-
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 /**
@@ -45,6 +46,8 @@ public class BluetoothServerConnector extends BluetoothConnector {
 
     // Member fields
     private AcceptThread mAcceptThread;
+
+    private BluetoothSocket socket = null;
 
     /**
      * Constructor. Prepares a new BluetoothChat session.
@@ -134,7 +137,7 @@ public class BluetoothServerConnector extends BluetoothConnector {
         public void run() {
             if (D) Log.d(TAG, "BEGIN mAcceptThread" + this);
             setName("AcceptThread");
-            BluetoothSocket socket = null;
+            socket = null;
 
             // Listen to the server socket if we're not connected
             while (mState != STATE_CONNECTED) {

@@ -1,10 +1,8 @@
 package com.mikedg.android.tiltcontrolcontroller;
 
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 import android.util.Log;
 
 import com.google.glass.companion.GlassProtocol;
@@ -16,7 +14,6 @@ import com.squareup.otto.Subscribe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -35,6 +32,10 @@ public class GlassController {
     private BluetoothSocket socket;
     public BluetoothDevice device;
 
+    public String deviceErrorType = DEVICE_NO_ERROR;
+    public static final String GLASS_NOT_SET_UP = "Glass app not started or Glass is off.";
+    public static final String DEVICE_NO_ERROR = "none";
+
     private static final String[] authorizedNames = new String[]{"mike digiovanni's glass", "andy lin's glass", "geoff cubitt's glass"};
 
 
@@ -51,6 +52,7 @@ public class GlassController {
                 mBtAdapter = BluetoothAdapter.getDefaultAdapter();
 
                 Set<BluetoothDevice> devices = mBtAdapter.getBondedDevices();
+
                 for (BluetoothDevice foundDevice : devices) {
                     Log.d("BTD", "type:" + foundDevice.getType() + " " + foundDevice.getName() + "remove dev is not null for self address");
 
@@ -74,15 +76,19 @@ public class GlassController {
 
                         try {
                             socket.connect();  // TODO: Socket may be closed
+                            deviceErrorType = DEVICE_NO_ERROR;
                         } catch (IOException connectException) {
                             // Unable to connect; close the socket and get out
                             try {
                                 socket.close();
+                                deviceErrorType = GLASS_NOT_SET_UP;
                                 device = null;
+                                Log.d("Controller Connection Problem", "unable to connect so closed socket");
                                 return;
                             } catch (IOException closeException) {
                                 closeException.printStackTrace();
                                 device = null;
+                                deviceErrorType = GLASS_NOT_SET_UP;
                                 return;
                             }
                         }

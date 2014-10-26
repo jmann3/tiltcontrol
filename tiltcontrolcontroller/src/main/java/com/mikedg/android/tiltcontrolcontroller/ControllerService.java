@@ -5,15 +5,12 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.nfc.Tag;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.mikedg.android.btcomm.Configuration;
 import com.mikedg.android.btcomm.connector.BluetoothClientConnector;
@@ -101,7 +98,7 @@ public class ControllerService extends Service implements ThreadCompleteListener
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        mGlassController = new GlassController(this);
+            mGlassController = new GlassController(this);
 
         return START_STICKY;
     }
@@ -126,7 +123,8 @@ public class ControllerService extends Service implements ThreadCompleteListener
 
                     Configuration.bus.post(new StatusMessageEvent("Started service."));
                 } else {
-                    Configuration.bus.post(new StatusMessageEvent("No device found"));
+                    if (mGlassController.deviceErrorType.equals(GlassController.GLASS_NOT_SET_UP))
+                        Configuration.bus.post(new StatusMessageEvent(GlassController.GLASS_NOT_SET_UP));
                 }
             }
         });

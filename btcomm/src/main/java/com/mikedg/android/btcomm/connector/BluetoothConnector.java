@@ -278,6 +278,7 @@ public abstract class BluetoothConnector {
                     Log.i(TAG, "before size = mInStream.readInt()");
                     size = mmInStream.readInt();
                     Log.i(TAG, "after size = mInStream.readInt()");
+
                     if (size > 0) {
                         buffer = new byte[size];
                         int i = 0;
