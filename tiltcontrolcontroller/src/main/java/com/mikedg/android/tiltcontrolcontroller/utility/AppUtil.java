@@ -1,4 +1,4 @@
-package com.mikedg.android.tiltcontrolcontroller;
+package com.mikedg.android.tiltcontrolcontroller.utility;
 
 import android.app.Activity;
 import android.app.ActivityManager;

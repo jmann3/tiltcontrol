@@ -13,7 +13,9 @@ import android.view.ViewConfiguration;
 import android.widget.Button;
 
 import com.mikedg.android.btcomm.connector.BluetoothConnector;
+import com.mikedg.android.tiltcontrolcontroller.data.TutorialData;
 import com.mikedg.android.tiltcontrolcontroller.events.StatusMessageEvent;
+import com.mikedg.android.tiltcontrolcontroller.utility.AppUtil;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.UnderlinePageIndicator;
 
@@ -59,7 +61,7 @@ public class MainActivity extends DisplayActivity {
 
             @Override
             public Fragment getItem(int position) {
-                int imageId = ((int[])TutorialData.getImages())[position];
+                int imageId = ((int[]) TutorialData.getImages())[position];
                 String title = ((String[])TutorialData.getTitles())[position];
                 String description = ((String[])TutorialData.getDescriptions())[position];
                 return TutorialScreenFragment.newInstance(imageId, title, description);
@@ -139,6 +141,7 @@ public class MainActivity extends DisplayActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+        Intent intent;
         switch (id) {
             case R.id.wink_item:
 
@@ -150,11 +153,18 @@ public class MainActivity extends DisplayActivity {
             case R.id.diagnotic_item:
 
                 // show diagnostic screen
-                Intent intent = new Intent(this, DiagnosticActivity.class);
+                intent = new Intent(this, DiagnosticActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
 
                 return true;
+
+            case R.id.help_item:
+
+                // show help screen
+                intent = new Intent(this, HelpActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -195,7 +205,7 @@ public class MainActivity extends DisplayActivity {
         if (statusMessageEvent.getMessage().equals("Started service.")) {
             // connection complete
             AppUtil.stopActivityIndicator();
-            
+
         } else if (statusMessageEvent.getMessage().equals(GlassController.GLASS_NOT_SET_UP)) {
             AppUtil.stopActivityIndicator();
             AppUtil.showGlobalAlertDialog(this, "Warning", GlassController.GLASS_NOT_SET_UP, null);

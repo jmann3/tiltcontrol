@@ -7,4 +7,5 @@
     <color name="windowBackground">#00acc1</color>
     <color name="popupBackground_light">#80deea</color>
     <color name="popupBackground_dark">#26c6da</color>
+    <color name="cardBackground">#B2EBF2</color>
 </resources>

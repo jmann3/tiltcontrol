@@ -15,6 +15,7 @@ import com.mikedg.android.btcomm.connector.ConnectorHelper;
 import com.mikedg.android.btcomm.messages.CommandMessage;
 import com.mikedg.android.btcomm.messages.PTGCMessage;
 import com.mikedg.android.tiltcontrolcontroller.events.StatusMessageEvent;
+import com.mikedg.android.tiltcontrolcontroller.utility.AppUtil;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;

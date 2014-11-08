@@ -1,4 +1,6 @@
-package com.mikedg.android.tiltcontrolcontroller;
+package com.mikedg.android.tiltcontrolcontroller.data;
+
+import com.mikedg.android.tiltcontrolcontroller.R;
 
 /**
  * Created by jmann on 10/14/14.

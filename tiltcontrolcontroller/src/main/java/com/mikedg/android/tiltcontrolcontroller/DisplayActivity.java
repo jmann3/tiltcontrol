@@ -1,13 +1,8 @@
 package com.mikedg.android.tiltcontrolcontroller;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -16,6 +11,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.mikedg.android.tiltcontrolcontroller.events.SimWinkEvent;
+import com.mikedg.android.tiltcontrolcontroller.utility.AppUtil;
 
 /**
  * Created by jmann on 10/12/14.
